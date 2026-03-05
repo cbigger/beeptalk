@@ -1,11 +1,20 @@
 """
 beeper.py
 
-Loads configuration from beeper.toml (looked up next to this script, or pass
-a path as the first argument before text, see CLI section below).
+Loads configuration from beeper.toml (next to this script by default, or pass
+--config /path/to/file.toml before text).
 
 Pipeline:
   text stream → Beeper.feed(chunk) → event queue → audio worker thread
+
+Words are split into syllables via pyphen. Each syllable produces a beep.
+Syllables within a word play continuously (no gap). Punctuation/whitespace
+produce silence.
+
+Silence durations (configurable in toml):
+  space/tab   → space_ms
+  comma       → comma_ms
+  everything else → other_ms
 
 Usage:
   python beeper.py "some text"
@@ -13,6 +22,7 @@ Usage:
   echo "some text" | python beeper.py -
   python beeper.py          # interactive stdin
 """
+
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 
@@ -26,6 +36,7 @@ from pathlib import Path
 import numpy as np
 import pygame
 import pyphen
+
 # ---------------------------------------------------------------------------
 # Config loading
 # ---------------------------------------------------------------------------
@@ -36,18 +47,8 @@ def load_config(path: Path) -> dict:
         return tomllib.load(f)
 
 def build_freq_table(cfg: dict) -> np.ndarray:
-    """
-    Returns a 26-element array where freqs[i] is the frequency for letter-index i.
-    """
-    low  = cfg["pitch"]["freq_low"]
-    high = cfg["pitch"]["freq_high"]
-    base = np.linspace(low, high, 26)
-    # letter_indices maps letter → its position in the freq table
-    mapping = cfg["pitch"]["letter_indices"]
-    freqs = np.empty(26)
-    for letter, idx in mapping.items():
-        freqs[idx] = base[idx]
-    return freqs
+    scale = cfg["pitch"]["scale_frequencies"]
+    return np.array([scale[i % len(scale)] for i in range(26)], dtype=float)
 
 def letter_index(ch: str, mapping: dict) -> int:
     return mapping.get(ch.lower(), 0)
@@ -74,9 +75,17 @@ def make_beep(freq: float, duration_ms: int, cfg: dict) -> np.ndarray:
     return (stereo * 32767).astype(np.int16)
 
 def make_silence(duration_ms: int, cfg: dict) -> np.ndarray:
-    sr = cfg["audio"]["sample_rate"]
-    n  = int(sr * duration_ms / 1000)
+    n = int(cfg["audio"]["sample_rate"] * duration_ms / 1000)
     return np.zeros((n, 2), dtype=np.int16)
+
+# ---------------------------------------------------------------------------
+# Punctuation classification
+# ---------------------------------------------------------------------------
+def silence_ms(ch: str, cfg: dict) -> int:
+    sc = cfg["silence"]
+    if ch in (' ', '\t'): return sc["space_ms"]
+    if ch == ',':         return sc["comma_ms"]
+    return sc["other_ms"]
 
 # ---------------------------------------------------------------------------
 # Syllable → pitch + duration
@@ -85,23 +94,13 @@ def syllable_frequency(syllable: str, freqs: np.ndarray, mapping: dict) -> float
     letters = [ch for ch in syllable.lower() if ch.isascii() and ch.isalpha()]
     if not letters:
         return float(freqs[0])
-    idx = sum(letter_index(ch, mapping) for ch in letters) % 26
+    idx = sum(letter_index(ch, mapping) for ch in letters) % len(freqs)
     return float(freqs[idx])
 
 def syllable_duration_ms(syllable: str, cfg: dict) -> int:
-    dc  = cfg["duration"]
-    n   = max(1, sum(1 for ch in syllable if ch.isascii() and ch.isalpha()))
-    ms  = n * dc["ms_per_letter"]
-    return int(np.clip(ms, dc["min_ms"], dc["max_ms"]))
-
-# ---------------------------------------------------------------------------
-# Silence duration from punctuation character
-# ---------------------------------------------------------------------------
-def silence_ms(ch: str, cfg: dict) -> int:
-    sc = cfg["silence"]
-    if ch in (' ', '\t'): return sc["space_ms"]
-    if ch == ',':         return sc["comma_ms"]
-    return sc["other_ms"]
+    dc = cfg["duration"]
+    n  = max(1, sum(1 for ch in syllable if ch.isascii() and ch.isalpha()))
+    return int(np.clip(n * dc["ms_per_letter"], dc["min_ms"], dc["max_ms"]))
 
 # ---------------------------------------------------------------------------
 # Audio worker
