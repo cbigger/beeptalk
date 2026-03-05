@@ -1,4 +1,4 @@
-# beeper
+# beeptalk
 
 Converts text to audio beeps. Each syllable of each word produces a sine-wave tone. Pitch is derived from the letters in the syllable, duration from its length. Punctuation and whitespace produce silence. Designed for streaming input.
 
