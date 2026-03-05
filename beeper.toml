@@ -3,8 +3,8 @@
 [audio]
 sample_rate = 44100
 volume      = 0.4        # 0.0 – 1.0
-attack_ms   = 6
-decay_ms    = 6
+attack_ms   = 12
+decay_ms    = 12
 
 [pitch]
 freq_low    = 246.94     # low B (B3)  — anchor for letter index 0
@@ -41,14 +41,14 @@ y = 24
 z = 25
 
 [duration]
-ms_per_letter = 40       # base multiplier per letter in a syllable
-min_ms        = 40
-max_ms        = 300
+ms_per_letter = 50       # base multiplier per letter in a syllable
+min_ms        = 60
+max_ms        = 600
 
 [silence]
 space_ms = 40            # space or tab
-comma_ms = 80            # comma
-other_ms = 120           # period, newline, all other punctuation
+comma_ms = 100            # comma
+other_ms = 200           # period, newline, all other punctuation
 
 [language]
 pyphen_lang = "en_US"
