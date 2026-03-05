@@ -1,0 +1,77 @@
+# beeper-natural-minor.toml
+#
+# A natural minor (Aeolian): A B C D E F G
+# 3 octaves (A3–G6), 21 notes. Indices 21–25 wrap back to A3.
+# Smooth, dark, folky character.
+
+[audio]
+sample_rate = 44100
+volume      = 0.4
+attack_ms   = 6
+decay_ms    = 6
+
+[pitch]
+scale_frequencies = [
+  220.00,   # A3
+  246.94,   # B3
+  261.63,   # C4
+  293.66,   # D4
+  329.63,   # E4
+  349.23,   # F4
+  392.00,   # G4
+  440.00,   # A4
+  493.88,   # B4
+  523.25,   # C5
+  587.33,   # D5
+  659.25,   # E5
+  698.46,   # F5
+  783.99,   # G5
+  880.00,   # A5
+  987.77,   # B5
+  1046.50,  # C6
+  1174.66,  # D6
+  1318.51,  # E6
+  1396.91,  # F6
+  1567.98,  # G6
+]
+
+[pitch.letter_indices]
+a =  0
+b =  1
+c =  2
+d =  3
+e =  4
+f =  5
+g =  6
+h =  7
+i =  8
+j =  9
+k = 10
+l = 11
+m = 12
+n = 13
+o = 14
+p = 15
+q = 16
+r = 17
+s = 18
+t = 19
+u = 20
+v = 21
+w = 22
+x = 23
+y = 24
+z = 25
+
+[duration]
+ms_per_letter = 80
+min_ms        = 80
+max_ms        = 600
+
+[silence]
+space_ms = 40
+comma_ms = 80
+other_ms = 160
+
+[language]
+pyphen_lang = "en_US"

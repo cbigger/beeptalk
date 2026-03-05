@@ -68,8 +68,8 @@ y = 24
 z = 25
 
 [duration]
-ms_per_letter = 80
-min_ms        = 80
+ms_per_letter = 60
+min_ms        = 50
 max_ms        = 600
 
 [silence]
