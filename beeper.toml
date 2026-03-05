@@ -1,17 +1,44 @@
-# beeper.toml
+# beeper-chromatic.toml
+#
+# "Amodal" mapping: 26 frequencies linearly spaced from low B (B3) to high C (C6).
+# No scale or key — every letter gets its own unique pitch. Sounds more alien/robotic.
 
 [audio]
 sample_rate = 44100
-volume      = 0.4        # 0.0 – 1.0
-attack_ms   = 12
-decay_ms    = 12
+volume      = 0.4
+attack_ms   = 6
+decay_ms    = 6
 
 [pitch]
-freq_low    = 246.94     # low B (B3)  — anchor for letter index 0
-freq_high   = 1046.50    # high C (C6) — anchor for letter index 25
-# Letter-to-index mapping. Every letter a-z must appear exactly once.
-# Default is straight alphabetical (a=0 … z=25).
-# Rearrange to taste — the index determines pitch position between freq_low and freq_high.
+scale_frequencies = [
+  246.94,   # index 0
+  278.92,
+  310.90,
+  342.89,
+  374.87,
+  406.85,
+  438.83,
+  470.82,
+  502.80,
+  534.78,
+  566.76,
+  598.75,
+  630.73,
+  662.71,
+  694.69,
+  726.68,
+  758.66,
+  790.64,
+  822.62,
+  854.61,
+  886.59,
+  918.57,
+  950.55,
+  982.54,
+  1014.52,
+  1046.50,  # index 25
+]
+
 [pitch.letter_indices]
 a =  0
 b =  1
@@ -41,14 +68,14 @@ y = 24
 z = 25
 
 [duration]
-ms_per_letter = 50       # base multiplier per letter in a syllable
-min_ms        = 60
+ms_per_letter = 80
+min_ms        = 80
 max_ms        = 600
 
 [silence]
-space_ms = 40            # space or tab
-comma_ms = 100            # comma
-other_ms = 200           # period, newline, all other punctuation
+space_ms = 40
+comma_ms = 80
+other_ms = 160
 
 [language]
 pyphen_lang = "en_US"

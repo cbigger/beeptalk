@@ -1,0 +1,73 @@
+# beeper.toml
+
+[audio]
+sample_rate = 44100
+volume      = 0.4        # 0.0 – 1.0
+attack_ms   = 6
+decay_ms    = 6
+
+[pitch]
+# Frequencies indexed by letter_index % len(scale_frequencies), wraps automatically.
+scale_frequencies = [
+  130.81,  # C3
+  155.56,  # Eb3
+  174.61,  # F3
+  185.00,  # Gb3
+  196.00,  # G3
+  233.08,  # Bb3
+  261.63,  # C4
+  311.13,  # Eb4
+  349.23,  # F4
+  369.99,  # Gb4
+  392.00,  # G4
+  466.16,  # Bb4
+  523.25,  # C5
+  622.25,  # Eb5
+  698.46,  # F5
+  739.99,  # Gb5
+  783.99,  # G5
+  932.33,  # Bb5
+]
+
+# Letter-to-index mapping. Every letter a-z must appear exactly once.
+# Index selects position in scale_frequencies (mod len).
+[pitch.letter_indices]
+a =  0
+b =  1
+c =  2
+d =  3
+e =  4
+f =  5
+g =  6
+h =  7
+i =  8
+j =  9
+k = 10
+l = 11
+m = 12
+n = 13
+o = 14
+p = 15
+q = 16
+r = 17
+s = 18
+t = 19
+u = 20
+v = 21
+w = 22
+x = 23
+y = 24
+z = 25
+
+[duration]
+ms_per_letter = 80       # base multiplier per letter in a syllable
+min_ms        = 80
+max_ms        = 600
+
+[silence]
+space_ms = 40            # space or tab
+comma_ms = 80            # comma
+other_ms = 160           # period, newline, all other punctuation
+
+[language]
+pyphen_lang = "en_US"
