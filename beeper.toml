@@ -1,0 +1,54 @@
+# beeper.toml
+
+[audio]
+sample_rate = 44100
+volume      = 0.4        # 0.0 – 1.0
+attack_ms   = 6
+decay_ms    = 6
+
+[pitch]
+freq_low    = 246.94     # low B (B3)  — anchor for letter index 0
+freq_high   = 1046.50    # high C (C6) — anchor for letter index 25
+# Letter-to-index mapping. Every letter a-z must appear exactly once.
+# Default is straight alphabetical (a=0 … z=25).
+# Rearrange to taste — the index determines pitch position between freq_low and freq_high.
+[pitch.letter_indices]
+a =  0
+b =  1
+c =  2
+d =  3
+e =  4
+f =  5
+g =  6
+h =  7
+i =  8
+j =  9
+k = 10
+l = 11
+m = 12
+n = 13
+o = 14
+p = 15
+q = 16
+r = 17
+s = 18
+t = 19
+u = 20
+v = 21
+w = 22
+x = 23
+y = 24
+z = 25
+
+[duration]
+ms_per_letter = 40       # base multiplier per letter in a syllable
+min_ms        = 40
+max_ms        = 300
+
+[silence]
+space_ms = 40            # space or tab
+comma_ms = 80            # comma
+other_ms = 120           # period, newline, all other punctuation
+
+[language]
+pyphen_lang = "en_US"
